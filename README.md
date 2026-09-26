@@ -14,7 +14,15 @@ Aplicação acadêmica em PHP orientado a objetos, MySQL/PDO, HTML, CSS, Bootstr
 - Remoção de itens da cesta; isolamento dos registros por proprietário.
 - Criação automática do banco e tabelas por instalador CLI idempotente.
 
-## Executar no Windows / VS Code
+## Abrir no Windows
+
+Extraia o ZIP inteiro e dê dois cliques em **Iniciar.cmd**. O iniciador procura PHP no PATH ou XAMPP em `C:\xampp` / `D:\xampp`. Quando necessário, inicia o MySQL do XAMPP, prepara as tabelas, abre o servidor e o navegador em **http://127.0.0.1:8000**. Sem PHP, tenta o Docker Compose, caso o Docker Desktop esteja instalado e aberto.
+
+O iniciador não instala dependências nem altera a política de execução do Windows. PHP 8.2+ com PDO MySQL e um servidor MySQL são necessários; Docker Compose é a alternativa. Para banco personalizado, configure `config/local.php`. Feche a janela do servidor PHP para encerrar; com Docker, use `docker compose down`.
+
+Para apenas conferir o visual sem instalar nada, abra **PREVIA.html**. É uma captura HTML da aplicação, com dados fictícios e controles desativados; cadastros e login funcionam somente no servidor.
+
+## Executar manualmente no Windows / VS Code
 
 Requisitos: PHP 8.2+ com PDO MySQL, MySQL 8.0.16+ (ou MariaDB 10.11+) e Git. Bootstrap está incluído localmente; o site não depende de CDN.
 
@@ -31,7 +39,7 @@ php -S 127.0.0.1:8000 -t public
 5. Abra **http://127.0.0.1:8000**, escolha **Cadastre-se** e crie sua conta.
 6. Em **Cadastros**, crie primeiro um fornecedor; depois um produto vinculado e uma cesta.
 7. Em **Catálogo**, selecione os produtos e a cesta de destino. Confira o total em **Minhas cestas**.
-8. Em **Atualizar · AJAX**, altere fornecedor, produto ou cesta e salve sem recarregar a página.
+8. Em **Editar registros**, altere fornecedor, produto ou cesta e salve sem recarregar a página.
 
 O usuário do instalador precisa de permissão para criar banco/tabelas. Não publique `config/local.php`. O servidor embutido do PHP destina-se ao desenvolvimento; a raiz HTTP deve ser somente `public/`.
 
@@ -69,7 +77,7 @@ O arquivo [schema.sql](database/schema.sql) contém todos os campos, índices, c
 
 [Abrir arquivo editável no Figma](https://www.figma.com/design/mtPqZOrZAIF2Trn25V201X)
 
-As sete telas cobrem login, cadastro de conta, visão geral, cadastros, edição AJAX, catálogo e resumo da cesta. A imagem acima foi exportada do Figma e conferida visualmente. Os esboços usam Inter, componentes de formulário do Simple Design System e a identidade escura e verde do projeto. São representações dos fluxos, não capturas da aplicação. O estudo inicial permanece em [esbocos.svg](docs/esbocos.svg).
+As sete telas cobrem login, cadastro de conta, visão geral, cadastros, edição AJAX, catálogo e resumo da cesta. A imagem acima foi exportada do Figma e conferida visualmente. Os esboços registram o estudo inicial no Figma. A interface implementada recebeu depois um refinamento: tipografia do sistema, contraste mais discreto, títulos diretos e resumo de produtos em tabela. São representações dos fluxos, não capturas da aplicação. O estudo inicial permanece em [esbocos.svg](docs/esbocos.svg).
 
 ## Autenticação e decisões
 
@@ -89,7 +97,7 @@ No PowerShell, use `$env:DB_NAME="mpgestao_test"` antes do segundo comando. Se e
 
 ## Entrega Git
 
-Os commits locais preservam as etapas de construção. Após publicar o repositório privado, conceda ao professor acesso pelo GitHub para permitir a avaliação. Comentário da entrega: **Murilo Machado dos Santos Pellegrini — RA 60006899**.
+Os commits locais preservam as etapas de construção. O repositório está em https://github.com/Pellegrini196/mpgestao. Conceda ao professor acesso pelo GitHub para permitir a avaliação. Comentário da entrega: **Murilo Machado dos Santos Pellegrini — RA 60006899**.
 
 ## Referências e dependências
 
