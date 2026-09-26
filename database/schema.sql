@@ -1,0 +1,48 @@
+CREATE TABLE IF NOT EXISTS usuarios (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ nome VARCHAR(100) NOT NULL,
+ email VARCHAR(190) NOT NULL UNIQUE,
+ senha_hash CHAR(64) NOT NULL,
+ senha_salt CHAR(32) NOT NULL,
+ criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS fornecedores (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ usuario_id INT UNSIGNED NOT NULL,
+ nome VARCHAR(100) NOT NULL,
+ email VARCHAR(190) NOT NULL,
+ telefone VARCHAR(30) NOT NULL,
+ criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ UNIQUE KEY fornecedor_dono (id,usuario_id),
+ FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS produtos (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ usuario_id INT UNSIGNED NOT NULL,
+ fornecedor_id INT UNSIGNED NOT NULL,
+ nome VARCHAR(100) NOT NULL,
+ descricao VARCHAR(500) NOT NULL,
+ preco DECIMAL(10,2) NOT NULL,
+ criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ UNIQUE KEY produto_dono (id,usuario_id),
+ FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+ FOREIGN KEY (fornecedor_id,usuario_id) REFERENCES fornecedores(id,usuario_id),
+ CHECK (preco > 0)
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS cestas (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ usuario_id INT UNSIGNED NOT NULL,
+ nome VARCHAR(100) NOT NULL,
+ criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ UNIQUE KEY cesta_dono (id,usuario_id),
+ FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS cesta_produtos (
+ cesta_id INT UNSIGNED NOT NULL,
+ produto_id INT UNSIGNED NOT NULL,
+ usuario_id INT UNSIGNED NOT NULL,
+ adicionado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (cesta_id,produto_id),
+ FOREIGN KEY (cesta_id,usuario_id) REFERENCES cestas(id,usuario_id) ON DELETE CASCADE,
+ FOREIGN KEY (produto_id,usuario_id) REFERENCES produtos(id,usuario_id)
+) ENGINE=InnoDB;
