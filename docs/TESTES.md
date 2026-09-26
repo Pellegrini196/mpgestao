@@ -18,3 +18,9 @@ Para repetir o smoke HTTP, inicie o servidor apontando para um banco terminado e
 ```sh
 python tests/http_smoke.py http://127.0.0.1:8000
 ```
+
+## Revisão da interface — 26/09/2026
+
+Após o refinamento visual, a sintaxe PHP e JavaScript, as sete verificações de domínio e o fluxo HTTP completo foram executados novamente e aprovados. O servidor PHP foi iniciado no ambiente de desenvolvimento e respondeu em localhost. As páginas foram capturadas como HTML a partir das respostas reais do PHP com dados fictícios.
+
+O navegador remoto não permite acesso a esse localhost ou a arquivos locais; portanto, a revisão visual em navegador desta nova versão ficou pendente. `Iniciar.cmd` foi preparado para Windows, mas não executado em um Windows real neste ambiente. O banco de demonstração não acompanha o projeto.
