@@ -14,7 +14,7 @@ token=csrf();email=uuid.uuid4().hex+'@example.test'
 status,h=post('registro',dict(csrf=token,acao='registro',nome='HTTP Test',email=email,senha='Teste-123456',confirmacao='Teste-123456'))
 assert 'Conta criada' in h, re.findall(r'<div class="alert.*?</div>',h)
 status,h=post('login',dict(csrf=token,acao='login',email=email,senha='Teste-123456'))
-assert 'Tudo sob controle' in h
+assert '?page=cadastros' in h and 'name="acao" value="logout"' in h
 token=re.search(r'name="csrf-token" content="([^"]+)',h).group(1)
 for tipo,data in [('fornecedores',dict(nome='Fornecedor HTTP',email='http@example.test')),('cestas',dict(nome='Cesta HTTP'))]:
  _,h=post('cadastros',dict(csrf=token,acao='criar',tipo=tipo,**data));assert 'Cadastro realizado' in h
