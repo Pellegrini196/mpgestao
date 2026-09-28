@@ -2,11 +2,12 @@
 
 **Murilo Machado dos Santos Pellegrini — RA 60006899**
 
-Sistema de gestão de fornecedores, produtos e cestas desenvolvido em PHP orientado a objetos, MySQL/PDO, Bootstrap 5.3.3 e JavaScript puro. Identidade visual inspirada em [mpSOFTWARE](https://mpellegrini.software): fundo escuro, verde e assinatura `>mp_`.
+Sistema de gestão de fornecedores, produtos e cestas desenvolvido em PHP orientado a objetos, MySQL/PDO, Bootstrap 5.3.3 e JavaScript puro.
 
 ## Funcionalidades
 
 - Cadastro e autenticação de usuários por sessão.
+- Temas claro e escuro, com preferência salva no navegador.
 - Cadastro de fornecedores, produtos e cestas no banco de dados.
 - Área independente de edição dos três cadastros via `fetch`/AJAX.
 - Catálogo com checkboxes e validação de seleção no cliente e no servidor.
@@ -31,7 +32,7 @@ Na pasta do projeto, dê dois cliques em [Iniciar.cmd](Iniciar.cmd). O iniciador
 
 O iniciador não instala dependências nem altera a política de execução do Windows. PHP 8.2+ com PDO MySQL e um servidor MySQL ou MariaDB compatível são necessários; Docker Compose é a alternativa. Para banco personalizado, configure `config/local.php`. Feche a janela do servidor PHP para encerrar; com Docker, use `docker compose down`.
 
-Para apenas conferir o visual sem instalar nada, abra [PREVIA.html](PREVIA.html). É uma captura HTML da aplicação, com dados fictícios e controles desativados; cadastros e login funcionam somente no servidor.
+Para apenas conferir o visual sem instalar nada, abra [PREVIA.html](PREVIA.html). É uma captura HTML da aplicação, com dados fictícios e alternância de tema; cadastros e login funcionam somente no servidor.
 
 ## Executar manualmente no Windows / VS Code
 
@@ -89,7 +90,7 @@ O arquivo [schema.sql](database/schema.sql) contém todos os campos, índices, c
 
 [Abrir arquivo editável no Figma](https://www.figma.com/design/mtPqZOrZAIF2Trn25V201X)
 
-As sete telas cobrem login, cadastro de conta, visão geral, cadastros, edição AJAX, catálogo e resumo da cesta. A imagem acima foi exportada do Figma e conferida visualmente. Os esboços registram o estudo inicial no Figma. A interface implementada recebeu depois um refinamento: tipografia do sistema, contraste mais discreto, títulos diretos e resumo de produtos em tabela. São representações dos fluxos, não capturas da aplicação. O estudo inicial permanece em [esbocos.svg](docs/esbocos.svg).
+As sete telas documentam os fluxos de login, cadastro de conta, visão geral, cadastros, edição, catálogo e cesta. O estudo inicial também está disponível em [esbocos.svg](docs/esbocos.svg).
 
 ## Autenticação
 
@@ -114,6 +115,7 @@ Cada produto corresponde a uma unidade por cesta. O total considera o preço atu
 
 ```sh
 php tests/domain.php
+node tests/theme.cjs
 # Use um banco exclusivo cujo nome termine em _test:
 DB_NAME=mpgestao_test php tests/integration.php
 ```
@@ -124,5 +126,5 @@ No PowerShell, use `$env:DB_NAME="mpgestao_test"` antes do segundo comando. Se e
 
 - [PHP PDO](https://www.php.net/manual/pt_BR/book.pdo.php)
 - [Bootstrap 5.3](https://getbootstrap.com/docs/5.3/getting-started/introduction/) — licença MIT, preservada no cabeçalho do CSS.
-- [Markdown Guide](https://www.markdownguide.org/)
+- Inter — fonte incluída localmente sob a [SIL Open Font License](public/assets/fonts/OFL.txt).
 - [Planejamento](docs/PLANEJAMENTO.md)
