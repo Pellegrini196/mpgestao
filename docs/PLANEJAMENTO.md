@@ -5,10 +5,10 @@
 3. **Backend:** classes de domínio, repositórios PDO, autenticação por sessão, autorização por proprietário, CSRF e instalação idempotente.
 4. **Frontend:** HTML, Bootstrap local, CSS e JavaScript puro. Cadastro tradicional; edição via fetch/AJAX; catálogo com seleção múltipla; cesta com total e contagem.
 5. **Validação:** testes de integração HTTP/MySQL, duplicidade, autenticação, autorização, CSRF, valores monetários e persistência. Documentar resultados efetivamente obtidos.
-6. **Entrega:** README, imagens dos esboços, DER, SQL, instruções Windows/VS Code/Docker e histórico Git. Nome e RA preenchidos; publicar em novo repositório privado autorizado pelo aluno.
+6. **Documentação:** README com instalação e uso, esboços no Figma, DER, esquema SQL e resultados dos testes.
 
 ## Decisões
-- “SHA254” interpretado como SHA-256. Confirmar com o professor.
+- Autenticação implementada com SHA-256 e salt aleatório individual; detalhes em `app/Auth.php` e no README.
 - Uma unidade por produto em cada cesta, garantida por chave primária composta.
 - Dados isolados por usuário; não existe cadastro público de produtos.
 - Valor na cesta é o preço atual do produto; edição de preço recalcula os resumos.
