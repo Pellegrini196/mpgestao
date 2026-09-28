@@ -2,7 +2,7 @@
 
 **Murilo Machado dos Santos Pellegrini — RA 60006899**
 
-Aplicação acadêmica em PHP orientado a objetos, MySQL/PDO, HTML, CSS, Bootstrap 5.3.3 e JavaScript puro. Identidade visual inspirada em [mpSOFTWARE](https://mpellegrini.software): fundo escuro, verde e assinatura `>mp_`.
+Sistema de gestão de fornecedores, produtos e cestas desenvolvido em PHP orientado a objetos, MySQL/PDO, Bootstrap 5.3.3 e JavaScript puro. Identidade visual inspirada em [mpSOFTWARE](https://mpellegrini.software): fundo escuro, verde e assinatura `>mp_`.
 
 ## Funcionalidades
 
@@ -14,13 +14,24 @@ Aplicação acadêmica em PHP orientado a objetos, MySQL/PDO, HTML, CSS, Bootstr
 - Remoção de itens da cesta; isolamento dos registros por proprietário.
 - Criação automática do banco e tabelas por instalador CLI idempotente.
 
-## Abrir no Windows
+## Instalação
 
-Extraia o ZIP inteiro e dê dois cliques em **Iniciar.cmd**. O iniciador procura PHP no PATH ou XAMPP em `C:\xampp` / `D:\xampp`. Quando necessário, inicia o MySQL do XAMPP, prepara as tabelas, abre o servidor e o navegador em **http://127.0.0.1:8000**. Sem PHP, tenta o Docker Compose, caso o Docker Desktop esteja instalado e aberto.
+Clone o repositório ou baixe e extraia o ZIP:
 
-O iniciador não instala dependências nem altera a política de execução do Windows. PHP 8.2+ com PDO MySQL e um servidor MySQL são necessários; Docker Compose é a alternativa. Para banco personalizado, configure `config/local.php`. Feche a janela do servidor PHP para encerrar; com Docker, use `docker compose down`.
+```sh
+git clone https://github.com/Pellegrini196/mpgestao.git
+cd mpgestao
+```
 
-Para apenas conferir o visual sem instalar nada, abra **PREVIA.html**. É uma captura HTML da aplicação, com dados fictícios e controles desativados; cadastros e login funcionam somente no servidor.
+O acesso ao repositório exige uma conta autorizada, pois ele é privado.
+
+### Iniciador no Windows
+
+Na pasta do projeto, dê dois cliques em [Iniciar.cmd](Iniciar.cmd). O iniciador procura PHP no PATH ou XAMPP em `C:\xampp` / `D:\xampp`. Quando necessário, inicia o MySQL do XAMPP, prepara as tabelas, abre o servidor e o navegador em **http://127.0.0.1:8000**. Sem PHP, tenta o Docker Compose, caso o Docker Desktop esteja instalado e aberto.
+
+O iniciador não instala dependências nem altera a política de execução do Windows. PHP 8.2+ com PDO MySQL e um servidor MySQL ou MariaDB compatível são necessários; Docker Compose é a alternativa. Para banco personalizado, configure `config/local.php`. Feche a janela do servidor PHP para encerrar; com Docker, use `docker compose down`.
+
+Para apenas conferir o visual sem instalar nada, abra [PREVIA.html](PREVIA.html). É uma captura HTML da aplicação, com dados fictícios e controles desativados; cadastros e login funcionam somente no servidor.
 
 ## Executar manualmente no Windows / VS Code
 
@@ -60,7 +71,8 @@ config/       Configuração por ambiente ou arquivo local ignorado pelo Git
 database/     Modelo SQL com chaves e restrições
 docs/         Planejamento, DER e esboços
 public/       Única pasta exposta pelo servidor HTTP
-tests/        Testes de domínio e integração com banco
+scripts/      Verificação dos requisitos do iniciador local
+tests/        Testes de domínio, integração com banco e fluxo HTTP
 ```
 
 `Usuario` possui cestas. `Produto` referencia um objeto `Fornecedor`. `Cesta` mantém objetos `Produto`, elimina duplicatas e calcula quantidade e total em centavos inteiros. `Repository` hidrata essas relações a partir do PDO e restringe operações ao usuário autenticado.
@@ -79,11 +91,24 @@ O arquivo [schema.sql](database/schema.sql) contém todos os campos, índices, c
 
 As sete telas cobrem login, cadastro de conta, visão geral, cadastros, edição AJAX, catálogo e resumo da cesta. A imagem acima foi exportada do Figma e conferida visualmente. Os esboços registram o estudo inicial no Figma. A interface implementada recebeu depois um refinamento: tipografia do sistema, contraste mais discreto, títulos diretos e resumo de produtos em tabela. São representações dos fluxos, não capturas da aplicação. O estudo inicial permanece em [esbocos.svg](docs/esbocos.svg).
 
-## Autenticação e decisões
+## Autenticação
 
-O enunciado usa “SHA254”, interpretado como **SHA-256**. Armazenamento: `hash('sha256', salt + senha)`, com salt aleatório individual de 16 bytes representado em hexadecimal. O hash é comparado com `hash_equals`. Em aplicações reais, recomenda-se um algoritmo específico para senhas, como Argon2id, em vez de SHA-256 simples.
+A implementação em [app/Auth.php](app/Auth.php) utiliza **SHA-256 com salt individual**. No cadastro, `random_bytes(16)` gera 16 bytes aleatórios, convertidos por `bin2hex` em uma string de 32 caracteres. Essa string é concatenada à senha antes do cálculo do hash:
 
-Há token CSRF nas alterações, consultas preparadas, escape de HTML, regeneração da sessão após login e cookies HttpOnly/SameSite. O escopo é acadêmico; não há estoque, pagamento nem fechamento de pedido. O total usa o preço atual do cadastro, e cada item corresponde a uma unidade. A aplicação não implementa exclusão dos cadastros principais; apenas remoção de produtos de uma cesta.
+```php
+$salt = bin2hex(random_bytes(16));
+$hash = hash('sha256', $salt . $password);
+```
+
+O banco armazena o salt em `senha_salt` e o hash hexadecimal de 64 caracteres em `senha_hash`. A senha não é armazenada em texto puro. No login, o sistema refaz o cálculo com o salt da conta e compara o resultado com `hash_equals`.
+
+Esse mecanismo integra a implementação acadêmica. SHA-256 é uma função de hash de uso geral; adicionar salt não a transforma em um algoritmo específico de armazenamento de senhas.
+
+As operações de alteração usam token CSRF. O acesso ao banco utiliza consultas preparadas, as saídas HTML são escapadas e a sessão é regenerada após o login. Os cookies de sessão usam HttpOnly e SameSite.
+
+## Escopo
+
+Cada produto corresponde a uma unidade por cesta. O total considera o preço atual do cadastro. É possível remover produtos de uma cesta; a exclusão de fornecedores, produtos e cestas não foi implementada. Estoque, pagamento e fechamento de pedido estão fora do escopo.
 
 ## Verificação
 
@@ -94,10 +119,6 @@ DB_NAME=mpgestao_test php tests/integration.php
 ```
 
 No PowerShell, use `$env:DB_NAME="mpgestao_test"` antes do segundo comando. Se existir `config/local.php`, esse arquivo prevalece sobre as variáveis; ajuste-o para o banco de testes. Consulte [TESTES.md](docs/TESTES.md) para os resultados efetivamente executados.
-
-## Entrega Git
-
-Os commits locais preservam as etapas de construção. O repositório está em https://github.com/Pellegrini196/mpgestao. Conceda ao professor acesso pelo GitHub para permitir a avaliação. Comentário da entrega: **Murilo Machado dos Santos Pellegrini — RA 60006899**.
 
 ## Referências e dependências
 
